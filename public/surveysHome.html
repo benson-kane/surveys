@@ -16,8 +16,8 @@
             $('#surveyForm').submit(function(e) {
                 e.preventDefault();
                 var data = {
-                    userGender: $("#genderField").val(),
-                    favColor: $("#favColorField").val(),
+                    userGender: $("#genderField").val().toLowerCase(),
+                    favColor: $("#favColorField").val().toLowerCase(),
                     submissionTime: Date.now()
                 };
                 
@@ -39,13 +39,26 @@
             $("#getSubmissions").click(function() {
                 $.getJSON('submission', function(data) {
                   console.log(data);
+                  var totalSubs = 0;
+                  var totalMale = 0;
+                  var totalFemale = 0;
                   var everything = "<ul>";
                   for(var submission in data) {
                     sub = data[submission];
-                    everything += "<li> Gender: " + sub.userGender + " -- Favorite Color: " + sub.favColor + "</li>";
+                    totalSubs++;
+                    if (sub.userGender.toLowerCase() == "male") {
+                      totalMale++;
+                      
+                    }
+                    else if (sub.userGender.toLowerCase() == "female") {
+                      totalFemale++;
+                      
+                    }
+                    everything += "<li> Gender: " + sub.userGender + " -- Favorite Color: " + sub.favColor + " -- IP: " +sub.userIP +  "</li>";
                   }
                   everything += "</ul>";
                   $("#submissions").html(everything);
+                  $("#totalSubs").html("Total submissions: " + totalSubs + "<br>Total Male: " + totalMale + "<br>Total Female: " + totalFemale);
                 });
             });
         });
@@ -89,7 +102,7 @@
         <div class="col-lg-8 col-md-10 mx-auto"><h2>Favorite Color Survey</h2></div>
       </div>
       <div class="row">
-      <div class="col-lg-8 col-md-10 mx-auto" id="SoSearchContainer">
+      <div class="col-lg-8 col-md-10 mx-auto" id="<SoSearchContaine></SoSearchContaine>r">
             <form id="surveyForm">
               <div class="form-group">
                 <label for='genderField'>Gender</label>
@@ -112,9 +125,9 @@
                 -->
                 <button type='submit' id="submitButton">Submit</button>
             </form>
-            <h4 id="searchTerm">No search</h4>
-            <div id="unitResults">No results</div>
-            <div id="teachingPoolResults">No teaching pool</div>
+            <button id="getSubmissions">Show Submissions</button>
+            <div id="totalSubs"></div>
+            <div id="submissions"></div>
 
         </div>
       </div>
